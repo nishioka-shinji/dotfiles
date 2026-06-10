@@ -27,6 +27,7 @@ link() {
   echo "link : $dest -> $src"
 }
 
+link .zshrc .zshrc
 link .config/mise/config.toml .config/mise/config.toml
 
 # Homebrew が無ければインストールし、現在のシェルで使えるようにする
@@ -45,6 +46,25 @@ ensure_brew() {
   elif [ -x /usr/local/bin/brew ]; then
     eval "$(/usr/local/bin/brew shellenv)"
   fi
+}
+
+# Homebrew formula でインストールする CLI ツール
+# $1: formula 名
+install_formula() {
+  local formula="$1"
+
+  if ! command -v brew >/dev/null 2>&1; then
+    echo "skip : brew not found, cannot install formula '$formula'"
+    return
+  fi
+
+  if brew list --formula "$formula" >/dev/null 2>&1; then
+    echo "skip : formula '$formula' (already installed)"
+    return
+  fi
+
+  echo "brew : installing formula '$formula'"
+  brew install "$formula"
 }
 
 # Homebrew cask でインストールする GUI アプリ（macOS のみ）
@@ -68,5 +88,14 @@ install_cask() {
 
 if [ "$(uname)" = "Darwin" ]; then
   ensure_brew
+
+  # .zshrc が依存するツール
+  install_formula mise              # eval "$(mise activate zsh)"
+  install_formula zsh-autosuggestions
+
+  # GUI アプリ
   install_cask cmux
 fi
+
+# mise config（helm, terraform など）のツール導入は手動で:
+#   mise install
