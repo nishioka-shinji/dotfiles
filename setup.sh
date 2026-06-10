@@ -95,6 +95,7 @@ if [ "$(uname)" = "Darwin" ]; then
 
   # GUI アプリ
   install_cask cmux
+  install_cask shottr               # スクリーンショットツール
 fi
 
 # mise config（helm, terraform など）のツール導入は手動で:
