@@ -1,5 +1,5 @@
 [tools]
-helm = "4.2.0"
+helm = "4.2.2"
 python = "3.14.5"
 terraform = "1.15.5"
 duckdb = "1.5.4"
