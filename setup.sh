@@ -93,9 +93,10 @@ if [ "$(uname)" = "Darwin" ]; then
   install_formula mise              # eval "$(mise activate zsh)"
   install_formula zsh-autosuggestions
 
-  # GUI アプリ
+  # miseで管理できないツール
   install_cask cmux
   install_cask shottr               # スクリーンショットツール
+  install_formula telnet
 fi
 
 # mise config（helm, terraform など）のツール導入は手動で:
