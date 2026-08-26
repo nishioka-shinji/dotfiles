@@ -31,5 +31,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = { { import = "plugins" } },
   install = { colorscheme = { "habamax" } },
-  checker = { enabled = false },
+  -- 更新の有無だけ確認する。notify を切り、:Lazy の UI 側で気づく運用にする
+  checker = { enabled = true, notify = false },
 })
