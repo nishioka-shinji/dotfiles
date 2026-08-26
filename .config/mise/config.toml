@@ -9,6 +9,7 @@ github-cli = "2.98.0"
 jq = "1.8.2"
 kustomize = "5.8.1"
 k9s = "0.51.0"
+neovim = "0.12.5"
 
 # docker関連
 docker-cli = "29.7.2"
