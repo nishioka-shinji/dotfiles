@@ -29,6 +29,7 @@ link() {
 
 link .zshrc .zshrc
 link .config/mise/config.toml .config/mise/config.toml
+link .config/nvim .config/nvim
 
 # Homebrew が無ければインストールし、現在のシェルで使えるようにする
 ensure_brew() {
