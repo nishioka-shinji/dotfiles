@@ -5,6 +5,9 @@ vim.g.maplocalleader = "\\"
 -- :help を日本語 -> 英語の順に引く。ja が無い項目は英語版へフォールバックする
 vim.opt.helplang = "ja,en"
 
+-- lualine の配色に必要
+vim.opt.termguicolors = true
+
 -- lazy.nvim を未導入なら clone する
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
