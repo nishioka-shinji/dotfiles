@@ -13,6 +13,6 @@ neovim = "0.12.5"
 
 # docker関連
 docker-cli = "29.7.2"
-docker-compose = "5.5.0"
+docker-compose = "5.5.1"
 colima = "0.10.3"
 lima = "2.2.0" # colimaの依存パッケージ
