@@ -14,5 +14,6 @@ neovim = "0.12.5"
 # docker関連
 docker-cli = "29.8.0"
 docker-compose = "5.5.1"
+"aqua:docker/buildx" = "0.37.0" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
 lima = "2.2.0" # colimaの依存パッケージ
