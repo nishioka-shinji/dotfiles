@@ -31,6 +31,24 @@ link .zshrc .zshrc
 link .config/mise/config.toml .config/mise/config.toml
 link .config/nvim .config/nvim
 
+# ~/.docker/cli-plugins に残ったリンク切れを掃除する
+# （Docker Desktop をアンインストールすると、そこを指すリンクだけが残る）
+clean_docker_cli_plugins() {
+  local dir="$HOME/.docker/cli-plugins"
+  [ -d "$dir" ] || return
+
+  local plugin
+  for plugin in "$dir"/*; do
+    if [ -L "$plugin" ] && [ ! -e "$plugin" ]; then
+      rm "$plugin"
+      echo "clean : $plugin (broken symlink)"
+    fi
+  done
+}
+
+clean_docker_cli_plugins
+link .docker/cli-plugins/docker-compose .docker/cli-plugins/docker-compose
+
 # Homebrew が無ければインストールし、現在のシェルで使えるようにする
 ensure_brew() {
   if command -v brew >/dev/null 2>&1; then
