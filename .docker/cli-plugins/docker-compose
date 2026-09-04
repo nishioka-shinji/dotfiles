@@ -1,0 +1,10 @@
+#!/bin/sh
+# mise が管理する docker compose プラグインへ委譲する
+#
+# docker は ~/.docker/cli-plugins 配下を "docker-compose" という名前で探すが、
+# mise (aqua) が置くバイナリ名は "docker-cli-plugin-docker-compose" で一致しない。
+# かといって mise の shim を別名でリンクすると、shim は argv[0] でツールを
+# 判別するため "not a valid shim" になる。
+# そこで名前を合わせたこのラッパーから、実体のパスを mise に尋ねて exec する。
+set -e
+exec "$(mise where docker-compose)/docker-cli-plugin-docker-compose" "$@"
