@@ -1,0 +1,9 @@
+#!/bin/sh
+# mise が管理する docker buildx プラグインへ委譲する
+#
+# 事情は同ディレクトリの docker-compose と同じ（バイナリ名が docker に
+# 認識される名前と一致しない）。buildx は mise のレジストリに短縮名が無く
+# aqua バックエンドを明示して入れているので、mise へ問い合わせる名前も
+# config.toml に合わせて "aqua:docker/buildx" にする。
+set -e
+exec "$(mise where aqua:docker/buildx)/docker-cli-plugin-docker-buildx" "$@"

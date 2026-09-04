@@ -48,6 +48,7 @@ clean_docker_cli_plugins() {
 
 clean_docker_cli_plugins
 link .docker/cli-plugins/docker-compose .docker/cli-plugins/docker-compose
+link .docker/cli-plugins/docker-buildx .docker/cli-plugins/docker-buildx
 
 # Homebrew が無ければインストールし、現在のシェルで使えるようにする
 ensure_brew() {
