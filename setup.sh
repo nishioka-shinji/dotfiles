@@ -85,11 +85,15 @@ merge_claude_settings() {
 }
 
 # Claude Code の設定（実装ループの規約・agent 定義・hook・skill）
-# ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する
-link .claude/CLAUDE.md .claude/CLAUDE.md
+# ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
+# hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
+# 直接置いて共存させるため。
+link .claude/CLAUDE.base.md .claude/CLAUDE.md
 merge_claude_settings .claude/settings.base.json .claude/settings.json
 link .claude/agents .claude/agents
-link .claude/hooks .claude/hooks
+for hook in protect-branch confirm-destructive-git require-verification; do
+  link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"
+done
 for skill in delegation loop-retro daily-report memory-policy; do
   link ".claude/skills/$skill" ".claude/skills/$skill"
 done
@@ -110,8 +114,15 @@ clean_docker_cli_plugins() {
 }
 
 clean_docker_cli_plugins
-link .docker/cli-plugins/docker-compose .docker/cli-plugins/docker-compose
-link .docker/cli-plugins/docker-buildx .docker/cli-plugins/docker-buildx
+
+# Docker Desktop が入っている端末では cli-plugins を Desktop が管理するので触らない。
+# ラッパー経由の link は colima + mise 構成の端末だけに適用する。
+if [ -d /Applications/Docker.app ]; then
+  echo "skip : docker cli-plugins (managed by Docker Desktop)"
+else
+  link .docker/cli-plugins/docker-compose .docker/cli-plugins/docker-compose
+  link .docker/cli-plugins/docker-buildx .docker/cli-plugins/docker-buildx
+fi
 
 # Homebrew が無ければインストールし、現在のシェルで使えるようにする
 ensure_brew() {

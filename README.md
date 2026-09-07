@@ -11,7 +11,7 @@ mise install  # .config/mise/config.toml のツールを入れる
 
 ## Docker
 
-Docker Desktop は使わず、以下の組み合わせで動かしている。
+Docker Desktop は使わず、以下の組み合わせで動かしている。Docker Desktop が入っている端末では `~/.docker/cli-plugins` を Desktop が管理するため、`setup.sh` はプラグインの link をスキップする。
 
 - **colima** — Linux VM と Docker デーモン
 - **docker-cli / docker-compose / buildx** — すべて mise 管理

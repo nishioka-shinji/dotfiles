@@ -1,12 +1,12 @@
 # Claude Code 設定
 
-Claude Code の実装ループ（ループエンジニアリング）を構成するファイル群。`setup.sh` が `~/.claude/` 配下へファイル・ディレクトリ単位で symlink する（`settings.base.json` のみマージ）。この README は link 対象外。
+Claude Code の実装ループ（ループエンジニアリング）を構成するファイル群。`setup.sh` が `~/.claude/` 配下へ symlink する（`settings.base.json` のみマージ）。hooks と skills はディレクトリごとではなくファイル・skill 単位で link し、端末側に置いた組織固有の hook / skill と共存させる。`.base` 付きのファイルは Claude Code がこのディレクトリで自動読み込みしないようにした名前で、link 先で本来の名前になる。この README は link 対象外。
 
 ループの構造は `実行 → 観測 → 判定 → 修正` の反復。生成者（implementer）と判定者（reviewer / integrator / verifier）を分け、判定器の実行を hook で強制し、ループの失敗を loop-retro でルールに還元する。
 
 ## ループの設計と手順
 
-- `CLAUDE.md`: ループへの入口条件（委譲するか本体で済ませるか）、検証の原則、loop-retro のトリガーを定める全体規約
+- `CLAUDE.base.md`: ループへの入口条件（委譲するか本体で済ませるか）、検証の原則、loop-retro のトリガーを定める全体規約。`setup.sh` が `~/.claude/CLAUDE.md` として link する。`CLAUDE.md` の名前で置かないのは、この dotfiles ディレクトリを開いたときにプロジェクト指示として二重に読み込まれるのを避けるため
 - `skills/delegation/SKILL.md`: investigator → planner → implementer → reviewer → integrator → verifier の 12 ステップと、差し戻し上限・分岐先を定めるループ本体の手順書
 - `skills/loop-retro/SKILL.md`: ループが収束しなかったときに原因を分類し、ルール・agent 定義に還元するメタループの手順書
 - `skills/daily-report/SKILL.md`: 各タスクの `ループ:` 行を記録し、再発判定のデータ源となる日報の書式
