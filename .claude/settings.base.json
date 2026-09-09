@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "ask": [
+      "Bash(gh pr merge:*)"
+    ]
   },
   "model": "opus",
   "hooks": {
