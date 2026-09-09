@@ -1,7 +1,7 @@
 [tools]
 helm = "4.2.4"
 python = "3.14.7"
-terraform = "1.16.1"
+terraform = "1.16.2"
 duckdb = "1.5.5"
 aws-cli = "2.36.41"
 kind = "0.33.0"
