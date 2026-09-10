@@ -180,6 +180,54 @@ install_cask() {
   brew install --cask "$cask"
 }
 
+# 配布元から直接ダウンロードして /Applications に入れる macOS アプリ
+# mise にも Homebrew にも無いものだけをここで扱う。
+# 署名の Team ID を検証してから入れる（配布元が差し替わったら気づけるように）。
+# $1: アプリ名（Foo.app の Foo）  $2: zip の URL  $3: 期待する Team ID
+install_app_from_zip() {
+  local name="$1" url="$2" team="$3"
+  local dest="/Applications/$name.app"
+
+  if [ -d "$dest" ]; then
+    echo "skip : app '$name' (already installed)"
+    return
+  fi
+
+  local tmp
+  tmp=$(mktemp -d)
+  # shellcheck disable=SC2064
+  trap "rm -rf '$tmp'" RETURN
+
+  echo "app  : downloading '$name'"
+  if ! curl -fsSL -o "$tmp/app.zip" "$url"; then
+    echo "error: failed to download '$name' from $url"
+    return 1
+  fi
+
+  if ! unzip -q "$tmp/app.zip" -d "$tmp/x"; then
+    echo "error: failed to unzip '$name'"
+    return 1
+  fi
+
+  if [ ! -d "$tmp/x/$name.app" ]; then
+    echo "error: '$name.app' not found in the archive"
+    return 1
+  fi
+
+  local actual
+  actual=$(codesign -dv --verbose=2 "$tmp/x/$name.app" 2>&1 |
+    sed -n 's/^TeamIdentifier=//p')
+  if [ "$actual" != "$team" ]; then
+    echo "error: '$name' signed by '$actual', expected '$team'"
+    return 1
+  fi
+
+  cp -R "$tmp/x/$name.app" "$dest"
+  # ダウンロード由来の隔離属性を外し、初回起動の警告を出さないようにする
+  xattr -dr com.apple.quarantine "$dest" 2>/dev/null || true
+  echo "app  : installed '$name'"
+}
+
 if [ "$(uname)" = "Darwin" ]; then
   ensure_brew
 
@@ -192,6 +240,11 @@ if [ "$(uname)" = "Darwin" ]; then
   install_cask cmux
   install_cask shottr               # スクリーンショットツール
   install_formula telnet
+
+  # mise にも Homebrew にも無く、配布元の zip から入れるもの
+  # 失敗しても後続を止めない（ネットワーク断で setup 全体が落ちないように）
+  install_app_from_zip Kanary \
+    "https://kanary.download/ja/download?src=nav" KBU2LK9533 || true
 fi
 
 # mise config（helm, terraform など）のツール導入は手動で:

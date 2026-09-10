@@ -9,6 +9,20 @@ mise install  # .config/mise/config.toml のツールを入れる
 
 `setup.sh` は既存ファイルがあれば `.bak` に退避してからリンクを張るので、何度実行してもよい。
 
+## ツールをどこで管理するか
+
+優先度は mise > Homebrew > 配布元から直接。上から順に、入るものはできるだけ上で管理する。
+
+| 管理先 | 対象 | 定義場所 |
+|---|---|---|
+| mise | CLI ツール全般。Renovate がバージョンを追う | `.config/mise/config.toml` |
+| Homebrew | mise のレジストリに無いもの、GUI アプリ | `setup.sh` の `install_formula` / `install_cask` |
+| 配布元の zip | どちらにも無いもの | `setup.sh` の `install_app_from_zip` |
+
+`install_app_from_zip` は zip を展開して `/Applications` に置く。配布元が差し替わったことに気づけるよう、署名の Team ID が期待値と一致しなければインストールしない。ダウンロード由来の隔離属性は外すので、初回起動で警告は出ない。バージョンは配布元の最新に追随する（固定していない）ため、上げ直すにはアプリを消してから `./setup.sh` を実行する。
+
+現在の対象は Kanary（メニューバー常駐の録音・ウィンドウ操作ツール）だけ。mise にも Homebrew にも無く、公式サイトが zip を直接配っている。
+
 ## Docker
 
 Docker Desktop は使わず、以下の組み合わせで動かしている。Docker Desktop が入っている端末では `~/.docker/cli-plugins` を Desktop が管理するため、`setup.sh` はプラグインの link をスキップする。
