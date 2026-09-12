@@ -2,7 +2,7 @@
 name: integrator
 description: 統合レビュー担当。複数タスクが epic ブランチにマージされた後、デフォルトブランチとの差分全体を検査し、タスク境界をまたいだ不整合・計画に対する要件充足・統合して初めて見える副作用を検査して PASS / CHANGES_REQUESTED を返す。読み取り専用でコードを修正しない。個別タスクのレビューは reviewer が済ませている前提で、そこと重複する観点は見ない。
 tools: Read, Bash, Glob, Grep, LSP
-model: fable
+model: inherit
 effort: high
 color: yellow
 ---

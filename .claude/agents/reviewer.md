@@ -2,7 +2,7 @@
 name: reviewer
 description: 実装エージェントの成果物をレビューする担当。実装完了後に呼び出し、変更差分の正しさ・設計妥当性・副作用・検証の十分性を検査して PASS / CHANGES_REQUESTED の判定と指摘一覧を返す。読み取り専用でありコードを修正しない。
 tools: Read, Bash, Glob, Grep, LSP, WebFetch, WebSearch
-model: fable
+model: inherit
 effort: high
 color: purple
 ---
