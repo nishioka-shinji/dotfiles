@@ -2,7 +2,7 @@
 name: planner
 description: タスク分解担当。investigator の調査報告とユーザーの依頼を受け取り、実装可能な単位へ分解して実行順序・依存関係・検証手段を含む計画を返す。読み取り専用でファイルを一切変更しない。ファイル変更を伴うタスクで implementer に委譲する前に必ず通す。
 tools: Read, Bash, Glob, Grep, LSP
-model: fable
+model: inherit
 effort: high
 color: green
 ---
