@@ -8,6 +8,9 @@ vim.opt.helplang = "ja,en"
 -- lualine の配色に必要
 vim.opt.termguicolors = true
 
+-- y / p を OS のクリップボードと共有する
+vim.opt.clipboard = "unnamedplus"
+
 -- lazy.nvim を未導入なら clone する
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
