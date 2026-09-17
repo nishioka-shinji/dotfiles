@@ -29,8 +29,8 @@ epic ブランチはタスク全体でひとつ。各タスクの worktree は e
 ```
 main
  └── epic/PROJ-123-karpenter          ← 本体が作成、PR のソース
-      ├── epic/PROJ-123-karpenter/T1   ← worktree、マージ後に削除
-      └── epic/PROJ-123-karpenter/T2
+      ├── epic/PROJ-123-karpenter-T1   ← worktree、マージ後に削除
+      └── epic/PROJ-123-karpenter-T2
 ```
 
 配置は `~/Develop/worktrees/<リポジトリ名>/<ブランチ名>`。
@@ -54,7 +54,9 @@ w=~/Develop/worktrees/<repo>/<branch>; cd $w && git commit -F msg.txt
 git worktree add ~/Develop/worktrees/<repo>/epic/<name> -b epic/<name> <default>
 
 # タスクごとの worktree（epic から切る）
-git worktree add ~/Develop/worktrees/<repo>/epic/<name>/T1 -b epic/<name>/T1 epic/<name>
+# ブランチ名はハイフンで繋ぐ。epic/<name> が既にあると epic/<name>/T1 は作れない
+# （git の ref はファイルパスなので、同名のファイルとディレクトリが共存できない）
+git worktree add ~/Develop/worktrees/<repo>/epic/<name>-T1 -b epic/<name>-T1 epic/<name>
 ```
 
 epic 用の worktree は最後まで残す。マージ先であり、`integrator` の作業ディレクトリになり、PR の push 元になる。
