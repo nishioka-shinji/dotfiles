@@ -35,6 +35,20 @@ main
 
 配置は `~/Develop/worktrees/<リポジトリ名>/<ブランチ名>`。
 
+worktree の作成と、worktree 内での commit / push は別コマンドに分ける。デフォルトブランチをチェックアウトしたディレクトリから 1 コマンドに繋ぐと、hook がデフォルトブランチへの commit と判定してブロックする。
+
+commit / push するコマンドでは worktree のパスをリテラルの絶対パスで書く。hook（protect-branch.sh）はコマンド先頭の `cd <path> && ...` か、その git 呼び出しの `-C <path>` からブランチを判定し、どちらも取れなければ Bash ツールの cwd（通常はデフォルトブランチのリポジトリ）で判定する。`w=...; cd $w && git commit` のように変数を挟む、あるいは `cd` の前に別のコマンドを置くとパスを解決できずブロックされる。また hook はコマンド文字列全体を見るので、heredoc や python スクリプト内に `git commit` という文字列を含めるだけでも判定対象になる。ドキュメントに例を書くときは Edit / Write ツールを使う。
+
+git を含むコマンドの先頭は必ず `cd <リテラル絶対パス>` にする。変数代入・`rm`・`ls` などを先に置くと hook がパスを解決できず cwd で判定される。ファイル操作とコミットは別コマンドに分ける。
+
+```
+# OK
+git -C /Users/<me>/Develop/worktrees/<repo>/<branch> commit -F msg.txt
+cd /Users/<me>/Develop/worktrees/<repo>/<branch> && git commit -F msg.txt
+# NG（hook がパスを解決できず cwd で判定する）
+w=~/Develop/worktrees/<repo>/<branch>; cd $w && git commit -F msg.txt
+```
+
 ```
 # epic ブランチと、そのマージ先となる worktree
 git worktree add ~/Develop/worktrees/<repo>/epic/<name> -b epic/<name> <default>

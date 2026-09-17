@@ -162,9 +162,13 @@ install_formula() {
 }
 
 # Homebrew cask でインストールする GUI アプリ（macOS のみ）
-# $1: cask 名
+# $2 を渡すと tap を追加し、tap/cask の完全名で入れる。短い名前だと
+# 同名の homebrew-cask 側（orca など）に解決されてしまうため。
+# $1: cask 名  $2: tap 名（homebrew-cask 以外の場合のみ）
 install_cask() {
-  local cask="$1"
+  local cask="$1" tap="${2:-}"
+  local target="$cask"
+  [ -n "$tap" ] && target="$tap/$cask"
 
   if ! command -v brew >/dev/null 2>&1; then
     echo "skip : brew not found, cannot install cask '$cask'"
@@ -176,8 +180,13 @@ install_cask() {
     return
   fi
 
-  echo "cask : installing '$cask'"
-  brew install --cask "$cask"
+  if [ -n "$tap" ]; then
+    echo "tap  : adding '$tap'"
+    brew tap "$tap"
+  fi
+
+  echo "cask : installing '$target'"
+  brew install --cask "$target"
 }
 
 # 配布元から直接ダウンロードして /Applications に入れる macOS アプリ
@@ -239,6 +248,7 @@ if [ "$(uname)" = "Darwin" ]; then
   # miseで管理できないツール
   install_cask cmux
   install_cask shottr               # スクリーンショットツール
+  install_cask orca stablyai/orca   # コーディングエージェントの並列実行環境
   install_formula telnet
 
   # mise にも Homebrew にも無く、配布元の zip から入れるもの
