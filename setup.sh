@@ -88,7 +88,10 @@ merge_claude_settings() {
 # ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
 # hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
 # 直接置いて共存させるため。
-link .claude/CLAUDE.base.md .claude/CLAUDE.md
+# 全体規約は Claude Code と Codex で共有する。Claude Code はユーザーレベルの
+# AGENTS.md を読まないため、Claude Code 向けは CLAUDE.md の名前で link する。
+link .claude/AGENTS.base.md .claude/CLAUDE.md
+link .claude/AGENTS.base.md .codex/AGENTS.md
 merge_claude_settings .claude/settings.base.json .claude/settings.json
 for hook in protect-branch confirm-destructive-git; do
   link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"

@@ -6,7 +6,7 @@ Claude Code の全体規約・hook・skill を構成するファイル群。`set
 
 ## 規約と手順
 
-- `CLAUDE.base.md`: 本体で済ませるか Orca に任せるかの基準、検証の原則を定める全体規約。`setup.sh` が `~/.claude/CLAUDE.md` として link する。`CLAUDE.md` の名前で置かないのは、この dotfiles ディレクトリを開いたときにプロジェクト指示として二重に読み込まれるのを避けるため
+- `AGENTS.base.md`: 本体で済ませるか Orca に任せるかの基準、検証の原則を定める全体規約。`setup.sh` が `~/.claude/CLAUDE.md`・`~/.codex/AGENTS.md` として link する。`AGENTS.md` の名前で置かないのは、この dotfiles ディレクトリを開いたときにプロジェクト指示として二重に読み込まれるのを避けるため
 - `skills/daily-report/SKILL.md`: 日報の書式と、記録後の後片付け手順
 - `skills/memory-policy/SKILL.md`: 知見を rules / skills / CLAUDE.md のどこに書くかを決める基準
 
