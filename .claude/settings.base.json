@@ -23,18 +23,6 @@
           }
         ]
       }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "implementer|reviewer|integrator",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/require-verification.sh",
-            "timeout": 15
-          }
-        ]
-      }
     ]
   },
   "outputStyle": "Concise",
