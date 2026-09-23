@@ -93,7 +93,7 @@ merge_claude_settings() {
   echo "merge: $dest <- $base"
 }
 
-# Claude Code の設定（全体規約・hook・skill）
+# Claude Code 専用の設定（settings・hook）
 # ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
 # hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
 # 直接置いて共存させるため。
@@ -101,19 +101,45 @@ merge_claude_settings .claude/settings.base.json .claude/settings.json
 for hook in protect-branch confirm-destructive-git; do
   link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"
 done
-for skill in memory-policy; do
-  link ".claude/skills/$skill" ".claude/skills/$skill"
-done
 
 # Claude Code と Codex で共有する全体規約と skill
 # Claude Code はユーザーレベルの AGENTS.md も ~/.agents/skills も読まないため、
 # Claude Code 向けには CLAUDE.md と ~/.claude/skills に別途 link する。
 link .agents/AGENTS.base.md .claude/CLAUDE.md
 link .agents/AGENTS.base.md .codex/AGENTS.md
-for skill in daily-report; do
+for skill in daily-report memory-policy; do
   link ".agents/skills/$skill" ".claude/skills/$skill"
   link ".agents/skills/$skill" ".agents/skills/$skill"
 done
+
+# Codex の自動メモリを OFF にする（知見は memory-policy に従いリポジトリ側に書く）。
+# config.toml は Codex 自身も書き込むため link せず、該当キーだけ書き換える。
+# `codex features disable` はキーを消して既定値任せにするので、false を明示的に書く。
+disable_codex_memories() {
+  local cfg="$HOME/.codex/config.toml"
+  mkdir -p "$(dirname "$cfg")"
+  touch "$cfg"
+
+  if awk '/^\[/{s=($0=="[features]")} s&&/^memories *= *false *$/{f=1} END{exit !f}' "$cfg"; then
+    echo "skip : $cfg (features.memories already false)"
+    return
+  fi
+
+  local tmp
+  tmp=$(mktemp)
+  awk '
+    /^\[/ { s = ($0 == "[features]") }
+    s && /^memories *=/ { next }
+    { print }
+    $0 == "[features]" { print "memories = false"; done = 1 }
+    END { if (!done) printf "\n[features]\nmemories = false\n" }
+  ' "$cfg" >"$tmp"
+  cat "$tmp" >"$cfg"
+  rm "$tmp"
+  echo "set  : $cfg (features.memories = false)"
+}
+
+disable_codex_memories
 
 # ~/.docker/cli-plugins に残ったリンク切れを掃除する
 # （Docker Desktop をアンインストールすると、そこを指すリンクだけが残る）

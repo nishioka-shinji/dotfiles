@@ -1,12 +1,8 @@
 # Claude Code 設定
 
-Claude Code 専用の hook・skill・設定を構成するファイル群。Codex と共有する全体規約と skill は `.agents/`（[README](../.agents/README.md)）に置く。`setup.sh` が `~/.claude/` 配下へ symlink する（`settings.base.json` のみマージ）。hooks と skills はディレクトリごとではなくファイル・skill 単位で link し、端末側に置いた組織固有の hook / skill と共存させる。`.base` 付きのファイルは Claude Code がこのディレクトリで自動読み込みしないようにした名前で、link 先で本来の名前になる。この README は link 対象外。
+Claude Code 専用の hook・設定を構成するファイル群。Codex と共有する全体規約と skill は `.agents/`（[README](../.agents/README.md)）に置く。`setup.sh` が `~/.claude/` 配下へ symlink する（`settings.base.json` のみマージ）。hooks と skills はディレクトリごとではなくファイル・skill 単位で link し、端末側に置いた組織固有の hook / skill と共存させる。`.base` 付きのファイルは Claude Code がこのディレクトリで自動読み込みしないようにした名前で、link 先で本来の名前になる。この README は link 対象外。
 
 マルチエージェントでの作業は Orca に任せる（`orchestration` / `orca-cli` skill は Orca が `~/.claude/skills/` に配置する）。Agent ツールのサブエージェント定義は持たない。
-
-## 規約と手順
-
-- `skills/memory-policy/SKILL.md`: 知見を rules / skills / CLAUDE.md のどこに書くかを決める基準
 
 ## ハーネス側の強制（プロンプトに頼らないガードレール）
 
@@ -29,7 +25,7 @@ Claude Code 専用の hook・skill・設定を構成するファイル群。Code
 | `effortLevel` | `high` | 推論の投入量。判定精度を優先する |
 | `fastMode` | `true` | 対応モデルで高速出力を使う |
 | `tui` | `fullscreen` | ターミナル UI を全画面モードにする |
-| `autoMemoryEnabled` | `false` | 自動メモリを使わない。知見は `memory-policy` に従いリポジトリ側の rules / skills に書く |
+| `autoMemoryEnabled` | `false` | 自動メモリを使わない。知見は `memory-policy`（`.agents/`）に従いリポジトリ側の rules / skills に書く |
 | `skipWorkflowUsageWarning` | `true` | Workflow ツール利用時の使用量警告を出さない |
 
 hook の `command` は `$HOME/.claude/hooks/<name>.sh`。絶対パスにしないのはユーザー名が異なる端末で動かすため。
