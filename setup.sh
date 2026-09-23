@@ -15,8 +15,17 @@ link() {
 
   # 既存のリンク／ファイルがあれば退避
   if [ -e "$dest" ] || [ -L "$dest" ]; then
-    if [ "$(readlink "$dest" 2>/dev/null)" = "$src" ]; then
+    local current
+    current=$(readlink "$dest" 2>/dev/null || true)
+    if [ "$current" = "$src" ]; then
       echo "skip : $dest -> $src (already linked)"
+      return
+    fi
+    # dotfiles 内でファイルを移動した後の古いリンクは退避せず張り替える
+    if [ -L "$dest" ] && [ "${current#"$DOTFILES_DIR"/}" != "$current" ]; then
+      rm "$dest"
+      echo "relink: $dest (was $current)"
+      ln -s "$src" "$dest"
       return
     fi
     mv "$dest" "$dest.bak"
@@ -88,16 +97,22 @@ merge_claude_settings() {
 # ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
 # hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
 # 直接置いて共存させるため。
-# 全体規約は Claude Code と Codex で共有する。Claude Code はユーザーレベルの
-# AGENTS.md を読まないため、Claude Code 向けは CLAUDE.md の名前で link する。
-link .claude/AGENTS.base.md .claude/CLAUDE.md
-link .claude/AGENTS.base.md .codex/AGENTS.md
 merge_claude_settings .claude/settings.base.json .claude/settings.json
 for hook in protect-branch confirm-destructive-git; do
   link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"
 done
-for skill in daily-report memory-policy; do
+for skill in memory-policy; do
   link ".claude/skills/$skill" ".claude/skills/$skill"
+done
+
+# Claude Code と Codex で共有する全体規約と skill
+# Claude Code はユーザーレベルの AGENTS.md も ~/.agents/skills も読まないため、
+# Claude Code 向けには CLAUDE.md と ~/.claude/skills に別途 link する。
+link .agents/AGENTS.base.md .claude/CLAUDE.md
+link .agents/AGENTS.base.md .codex/AGENTS.md
+for skill in daily-report; do
+  link ".agents/skills/$skill" ".claude/skills/$skill"
+  link ".agents/skills/$skill" ".agents/skills/$skill"
 done
 
 # ~/.docker/cli-plugins に残ったリンク切れを掃除する
