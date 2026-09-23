@@ -12,14 +12,15 @@
 ## マルチエージェント（Orca）
 
 - 簡単な改修は本体が完遂する。例: K8s マニフェストの CPU / memory の requests・limits 変更
-- 上記以外でファイル変更を伴うタスク、並行して進められる調査・実装は Orca に任せる。監督・タスク分解・待ち合わせは `orchestration` skill、丸ごとの引き渡しや worktree・ターミナル操作は `orca-cli` skill を読む。明示的な依頼を待たない
+- 上記以外でファイル変更を伴うタスク、並行して進められる調査・実装は Orca に任せる。この指示を `orchestration` skill でいう「監督の明示的な依頼」とみなし、Coordinator として進める
 - Agent ツールのサブエージェントは使わない。ワーカーの分け方（実装とレビューを分けるか等）は Orca 側の判断に任せる
 - git 操作・Jira 操作・日報記録はワーカーに任せず本体が行う
 - PR マージ後、GitOps でクラスタに反映される変更は実クラスタで動作確認する。確認が取れるまで動作確認済みと report しない
+- 自分が Orca のワーカー（プロンプトに Task / Dispatch ID 入りのプリアンブルがある）なら、この節と「作業完了時の運用」は適用せずプリアンブルに従う
 
 ## worktree
 
-- worktree は Orca で作成・削除する（`orca worktree create` / `orca worktree rm`）。配置は Orca に任せる
+- worktree は Orca で作成・削除する（`git worktree` や EnterWorktree は使わない）
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
 
 ## コード
