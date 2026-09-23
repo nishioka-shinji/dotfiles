@@ -1,32 +1,20 @@
 # Claude Code 設定
 
-Claude Code の実装ループ（ループエンジニアリング）を構成するファイル群。`setup.sh` が `~/.claude/` 配下へ symlink する（`settings.base.json` のみマージ）。hooks と skills はディレクトリごとではなくファイル・skill 単位で link し、端末側に置いた組織固有の hook / skill と共存させる。`.base` 付きのファイルは Claude Code がこのディレクトリで自動読み込みしないようにした名前で、link 先で本来の名前になる。この README は link 対象外。
+Claude Code の全体規約・hook・skill を構成するファイル群。`setup.sh` が `~/.claude/` 配下へ symlink する（`settings.base.json` のみマージ）。hooks と skills はディレクトリごとではなくファイル・skill 単位で link し、端末側に置いた組織固有の hook / skill と共存させる。`.base` 付きのファイルは Claude Code がこのディレクトリで自動読み込みしないようにした名前で、link 先で本来の名前になる。この README は link 対象外。
 
-ループの構造は `実行 → 観測 → 判定 → 修正` の反復。生成者（implementer）と判定者（reviewer / integrator / verifier）を分け、判定器の実行を hook で強制し、ループの失敗を loop-retro でルールに還元する。
+マルチエージェントでの作業は Orca に任せる（`orchestration` / `orca-cli` skill は Orca が `~/.claude/skills/` に配置する）。Agent ツールのサブエージェント定義は持たない。
 
-## ループの設計と手順
+## 規約と手順
 
-- `CLAUDE.base.md`: ループへの入口条件（委譲するか本体で済ませるか）、検証の原則、loop-retro のトリガーを定める全体規約。`setup.sh` が `~/.claude/CLAUDE.md` として link する。`CLAUDE.md` の名前で置かないのは、この dotfiles ディレクトリを開いたときにプロジェクト指示として二重に読み込まれるのを避けるため
-- `skills/delegation/SKILL.md`: investigator → planner → implementer → reviewer → integrator → verifier の 12 ステップと、差し戻し上限・分岐先を定めるループ本体の手順書
-- `skills/loop-retro/SKILL.md`: ループが収束しなかったときに原因を分類し、ルール・agent 定義に還元するメタループの手順書
-- `skills/daily-report/SKILL.md`: 各タスクの `ループ:` 行を記録し、再発判定のデータ源となる日報の書式
-- `skills/memory-policy/SKILL.md`: loop-retro で見つけた欠けを rules / skills / CLAUDE.md のどこに書くかを決める基準
-
-## ループを回す agent（生成者と判定者）
-
-- `agents/investigator.md`: 実装前に現状を事実として固める読み取り専用の調査役
-- `agents/planner.md`: タスク分解と各タスクの検証手段を計画に紐づける読み取り専用の設計役
-- `agents/implementer.md`: 変更を行い、検証を実行して構造化報告を返す唯一の生成者
-- `agents/reviewer.md`: タスク単位で差分を検査し、検証を再実行して PASS / CHANGES_REQUESTED を返す第 1 判定者
-- `agents/integrator.md`: epic 統合後にタスク境界の不整合と計画充足を検査する第 2 判定者
-- `agents/verifier.md`: マージ後に実クラスタの状態を観測して OK / NG / 未反映を返す最終判定者
+- `CLAUDE.base.md`: 本体で済ませるか Orca に任せるかの基準、検証の原則を定める全体規約。`setup.sh` が `~/.claude/CLAUDE.md` として link する。`CLAUDE.md` の名前で置かないのは、この dotfiles ディレクトリを開いたときにプロジェクト指示として二重に読み込まれるのを避けるため
+- `skills/daily-report/SKILL.md`: 日報の書式と、記録後の後片付け手順
+- `skills/memory-policy/SKILL.md`: 知見を rules / skills / CLAUDE.md のどこに書くかを決める基準
 
 ## ハーネス側の強制（プロンプトに頼らないガードレール）
 
-- `settings.base.json`: PreToolUse / SubagentStop の hook 登録を持つループの実行環境定義。symlink ではなく `setup.sh` が `~/.claude/settings.json` へマージする。端末・組織ごとに生成される autoMode やプラグイン設定は既存の値が残る
-- `hooks/require-verification.sh`: implementer / reviewer / integrator が検証を実行せずに終了するのをブロックし、判定器の実行を強制する SubagentStop hook
-- `hooks/protect-branch.sh`: 保護ブランチへの commit / push を拒否し、ループの出口を必ず PR に通す PreToolUse hook
-- `hooks/confirm-destructive-git.sh`: reset --hard や force push を permission prompt に回し、ループ途中の状態破壊を人の確認に委ねる PreToolUse hook
+- `settings.base.json`: PreToolUse の hook 登録を持つ実行環境定義。symlink ではなく `setup.sh` が `~/.claude/settings.json` へマージする。端末・組織ごとに生成される autoMode やプラグイン設定は既存の値が残る
+- `hooks/protect-branch.sh`: 保護ブランチへの commit / push を拒否し、変更を必ず PR に通す PreToolUse hook
+- `hooks/confirm-destructive-git.sh`: reset --hard や force push を permission prompt に回し、作業途中の状態破壊を人の確認に委ねる PreToolUse hook
 
 ## settings.base.json の内容
 
@@ -38,10 +26,9 @@ Claude Code の実装ループ（ループエンジニアリング）を構成�
 | `model` | `opus` | 本体のデフォルトモデル。エイリアスなので最新の Opus に解決される。端末ごとに変えたい場合は `/model` で上書きする（ただし `setup.sh` 再実行でベースに戻る） |
 | `hooks.PreToolUse[Bash]` | `protect-branch.sh` | 保護ブランチ（main / master / staging / production / develop）への commit / push を deny |
 | `hooks.PreToolUse[Bash]` | `confirm-destructive-git.sh` | `reset --hard`、`clean -f`、`checkout -- <path>`、`push --force` を permission prompt に回す |
-| `hooks.SubagentStop[implementer\|reviewer\|integrator]` | `require-verification.sh` | 検証コマンドを実行せずに終了、または検証なしで PASS を出そうとしたサブエージェントをブロックして続行させる |
 | `outputStyle` | `Concise` | 結果を先に短く返す出力スタイル |
 | `alwaysThinkingEnabled` | `false` | 常時 extended thinking を使わない |
-| `effortLevel` | `high` | 推論の投入量。ループの判定精度を優先する |
+| `effortLevel` | `high` | 推論の投入量。判定精度を優先する |
 | `fastMode` | `true` | 対応モデルで高速出力を使う |
 | `tui` | `fullscreen` | ターミナル UI を全画面モードにする |
 | `autoMemoryEnabled` | `false` | 自動メモリを使わない。知見は `memory-policy` に従いリポジトリ側の rules / skills に書く |
@@ -51,7 +38,7 @@ hook の `command` は `$HOME/.claude/hooks/<name>.sh`。絶対パスにしな�
 
 ## 判定器の定義元
 
-検証コマンド（terraform validate、kustomize build 等）は各リポジトリの `CLAUDE.md` / `.claude/rules` に定義する。planner / implementer / reviewer / integrator はそこを唯一の情報源とし、自前で組み立てない。
+検証コマンド（terraform validate、kustomize build 等）は各リポジトリの `CLAUDE.md` / `.claude/rules` に定義する。本体・Orca のワーカーともにそこを唯一の情報源とし、自前で組み立てない。
 
 ## 含めていないもの
 

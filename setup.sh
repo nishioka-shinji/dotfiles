@@ -84,17 +84,16 @@ merge_claude_settings() {
   echo "merge: $dest <- $base"
 }
 
-# Claude Code の設定（実装ループの規約・agent 定義・hook・skill）
+# Claude Code の設定（全体規約・hook・skill）
 # ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
 # hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
 # 直接置いて共存させるため。
 link .claude/CLAUDE.base.md .claude/CLAUDE.md
 merge_claude_settings .claude/settings.base.json .claude/settings.json
-link .claude/agents .claude/agents
-for hook in protect-branch confirm-destructive-git require-verification; do
+for hook in protect-branch confirm-destructive-git; do
   link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"
 done
-for skill in delegation loop-retro daily-report memory-policy; do
+for skill in daily-report memory-policy; do
   link ".claude/skills/$skill" ".claude/skills/$skill"
 done
 

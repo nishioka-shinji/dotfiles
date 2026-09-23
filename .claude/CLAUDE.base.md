@@ -9,19 +9,17 @@
 
 - コンパクション時は、作業中の worktree の絶対パス、変更済みファイル一覧、検証コマンドを必ず保持する。
 
-## サブエージェントの使い分け
+## マルチエージェント（Orca）
 
-- 簡単な改修は委譲せず本体が完遂する。`planner` / `implementer` / `reviewer` を挟まない。例: K8s マニフェストの CPU / memory の requests・limits 変更。ただし `verifier` による反映確認は簡単な改修でも省略しない
-- 上記以外でファイル変更を伴うタスク → `delegation` skill を読み、実装ループを回す。明示的な依頼を待たない
-- 上記以外でファイル変更を伴うタスクでは、implementer に渡す前に必ず `planner` にタスク分解させる。分解結果は本体が検証し、ユーザーと合意してから実装に入る
-- 「どうなっているか」「どこにあるか」「なぜこうなっているか」、およびどのファイルを見ればよいか分からない状態 → `investigator` に委譲する。明示的な依頼を待たない
-- git 操作・Jira 操作・日報記録は委譲せず本体が行う
-- PR マージ後、GitOps でクラスタに反映される変更は `verifier` に動作確認させる。`verifier` が `OK` を返すまで動作確認済みと report しない
+- 簡単な改修は本体が完遂する。例: K8s マニフェストの CPU / memory の requests・limits 変更
+- 上記以外でファイル変更を伴うタスク、並行して進められる調査・実装は Orca に任せる。監督・タスク分解・待ち合わせは `orchestration` skill、丸ごとの引き渡しや worktree・ターミナル操作は `orca-cli` skill を読む。明示的な依頼を待たない
+- Agent ツールのサブエージェントは使わない。ワーカーの分け方（実装とレビューを分けるか等）は Orca 側の判断に任せる
+- git 操作・Jira 操作・日報記録はワーカーに任せず本体が行う
+- PR マージ後、GitOps でクラスタに反映される変更は実クラスタで動作確認する。確認が取れるまで動作確認済みと report しない
 
 ## worktree
 
-- 配置は `~/Develop/worktrees/<リポジトリ名>/<ブランチ名>`
-- ファイル変更を伴うタスクでは epic ブランチを立て、タスクごとの worktree を epic から切って epic に戻す。epic 用の worktree は統合レビューと PR まで残す。手順は `delegation` skill
+- worktree は Orca で作成・削除する（`orca worktree create` / `orca worktree rm`）。配置は Orca に任せる
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
 
 ## コード
@@ -33,8 +31,7 @@
 ## 検証
 
 - 成功を主張せず、実行したコマンドとその出力を証拠として示す。検証手段がない場合は「完了」と言わず、何を確認できていないかを明示する
-- 検証コマンドはリポジトリの CLAUDE.md / `.claude/rules` に定義されたものを唯一の情報源とする。planner / implementer / reviewer / integrator に自前で組み立てさせない。定義がないリポジトリでは実装に入る前に定義の追加を提案する
-- 実装ループが規定どおり収束しなかったとき（差し戻し上限超過、integrator の `CHANGES_REQUESTED`、verifier の `NG`、hook によるブロック、ユーザーからの成果物への差し戻し）は `loop-retro` skill を読み、原因をルール・agent 定義・skill に還元する
+- 検証コマンドはリポジトリの CLAUDE.md / `.claude/rules` に定義されたものを唯一の情報源とする。Orca のワーカーにも自前で組み立てさせない。定義がないリポジトリでは実装に入る前に定義の追加を提案する
 
 ## 作業完了時の運用
 
