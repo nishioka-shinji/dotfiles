@@ -10,6 +10,7 @@ jq = "1.8.2"
 kustomize = "5.8.1"
 k9s = "0.51.0"
 neovim = "0.12.5"
+node = "24.21.0"
 
 # docker関連
 docker-cli = "29.8.1"
