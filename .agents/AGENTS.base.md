@@ -32,7 +32,8 @@
 
 ## worktree
 
-- worktree は Orca で作成・削除する（`git worktree` や EnterWorktree は使わない）
+- Orca のワーカーに任せる作業の worktree は Orca で作成・削除する
+- 本体が完遂する改修の worktree は `git worktree add` で切る。Orca で作らない（使わないターミナルが残るため）。EnterWorktree は使わない
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
 
 ## コード
