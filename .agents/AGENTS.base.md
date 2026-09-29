@@ -17,7 +17,7 @@
 - git 操作・Jira 操作・日報記録はワーカーに任せず本体が行う
 - PR マージ後、GitOps でクラスタに反映される変更は実クラスタで動作確認する。確認が取れるまで動作確認済みと report しない
 - 自分が Orca のワーカー（プロンプトに Task / Dispatch ID 入りのプリアンブルがある）なら、この節と「作業完了時の運用」は適用せずプリアンブルに従う
-- ワーカーの model / effort は `worker-start` の `--model` / `--effort` で種別ごとに下表のとおり指定する。未指定だとユーザーデフォルト（Fable high）を継承し、調査・定型作業には過剰
+- ワーカーの model / effort は起動時に種別ごとに下表のとおり指定する。未指定だとユーザーデフォルトを継承し、種別に合わないことがある
 
 | ワーカー種別 | Claude model | Codex model | effort |
 |---|---|---|---|
@@ -32,7 +32,7 @@
 
 ## worktree
 
-- Orca のワーカーに任せる作業の worktree は Orca で作成・削除する
+- Orca のワーカーに任せる作業の worktree は Orca で作成・削除する。親子関係や配置の選び方は Orca の skill に従う
 - 本体が完遂する改修の worktree は `git worktree add` で切る。Orca で作らない（使わないターミナルが残るため）。EnterWorktree は使わない
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
 
