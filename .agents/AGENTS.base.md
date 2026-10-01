@@ -32,6 +32,7 @@
 
 ## worktree
 
+- worktree を切る前に `git branch --show-current` で現在地を確認する。デフォルトブランチ以外なら、そのタスク用に用意された worktree なので新たに切らずそこで作業する
 - Orca のワーカーに任せる作業の worktree は Orca で作成・削除する。親子関係や配置の選び方は Orca の skill に従う
 - 本体が完遂する改修の worktree は `git worktree add` で切る。Orca で作らない（使わないターミナルが残るため）。EnterWorktree は使わない
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
