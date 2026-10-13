@@ -45,6 +45,16 @@ if [ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; 
 fi
 
 # ============================================================
+# 秘密情報（macOS キーチェーンから環境変数に読み込む）
+#   登録: security add-generic-password -U -a "$USER" -s <変数名> -w
+# ============================================================
+keychain_export() {
+  local value
+  value=$(security find-generic-password -a "$USER" -s "$1" -w 2>/dev/null) || return 1
+  export "$1=$value"
+}
+
+# ============================================================
 # マシン固有設定（このPC専用・リポジトリ管理外）
 # ============================================================
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
