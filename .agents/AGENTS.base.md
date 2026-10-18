@@ -35,7 +35,10 @@
 ## worktree
 
 - worktree を切る前に `git branch --show-current` で現在地を確認する。デフォルトブランチ以外なら、そのタスク用に用意された worktree なので新たに切らずそこで作業する
-- Orca のワーカーに任せる作業の worktree は Orca で作成・削除する。親子関係や配置の選び方は Orca の skill に従う
+- Orca のワーカーに任せる作業の worktree は Orca で作成・削除する。配置は次の順で決める
+  - Coordinator の worktree のブランチでそのまま作業できるなら `--worktree current`（新しい端末を足すだけ）
+  - 別ブランチが必要なら `--worktree new-child --name <task> --base-branch origin/main`。`new-top-level` は使わない（Coordinator のカード配下に出ず、独立した worktree に見えるため）
+  - 同じ変更を扱うレビューワーカーは、実装ワーカーの worktree を `--worktree id:<repoId>::<path>` で指定して同居させる
 - 本体が完遂する改修の worktree は `git worktree add` で切る。Orca で作らない（使わないターミナルが残るため）。EnterWorktree は使わない
 - 作業完了後は worktree とブランチを削除する（手順は `daily-report` skill）
 
