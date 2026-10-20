@@ -15,6 +15,6 @@ node = "24.22.0"
 # docker関連
 docker-cli = "29.9.1"
 docker-compose = "5.6.0"
-"aqua:docker/buildx" = "0.38.0" # レジストリに短縮名が無いのでバックエンドを明示
+"aqua:docker/buildx" = "0.38.1" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
 lima = "2.2.1" # colimaの依存パッケージ
