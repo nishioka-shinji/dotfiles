@@ -1,6 +1,6 @@
 [tools]
 helm = "4.3.1"
-python = "3.15.0"
+python = "3.15.1"
 terraform = "1.16.6"
 duckdb = "1.5.6"
 aws-cli = "2.38.3"
