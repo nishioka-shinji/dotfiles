@@ -26,7 +26,6 @@
     ]
   },
   "outputStyle": "Concise",
-  "alwaysThinkingEnabled": false,
   "effortLevel": "high",
   "fastMode": true,
   "tui": "fullscreen",

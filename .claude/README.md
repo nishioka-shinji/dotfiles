@@ -21,7 +21,6 @@ Claude Code 専用の hook・設定を構成するファイル群。Codex と共
 | `hooks.PreToolUse[Bash]` | `protect-branch.sh` | 保護ブランチ（main / master / staging / production / develop）への commit / push を deny |
 | `hooks.PreToolUse[Bash]` | `confirm-destructive-git.sh` | `reset --hard`、`clean -f`、`checkout -- <path>`、`push --force` を permission prompt に回す |
 | `outputStyle` | `Concise` | 結果を先に短く返す出力スタイル |
-| `alwaysThinkingEnabled` | `false` | 常時 extended thinking を使わない |
 | `effortLevel` | `high` | 推論の投入量。判定精度を優先する |
 | `fastMode` | `true` | 対応モデルで高速出力を使う |
 | `tui` | `fullscreen` | ターミナル UI を全画面モードにする |
