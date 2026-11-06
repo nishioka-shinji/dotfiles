@@ -17,4 +17,4 @@ docker-cli = "29.9.3"
 docker-compose = "5.7.0"
 "aqua:docker/buildx" = "0.38.2" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
-lima = "2.2.1" # colimaの依存パッケージ
+lima = "2.3.0" # colimaの依存パッケージ
