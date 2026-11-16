@@ -13,7 +13,7 @@ neovim = "0.12.6"
 node = "26.13.1"
 
 # docker関連
-docker-cli = "29.9.3"
+docker-cli = "29.10.0"
 docker-compose = "5.7.1"
 "aqua:docker/buildx" = "0.39.0" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
