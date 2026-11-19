@@ -93,14 +93,11 @@ merge_claude_settings() {
   echo "merge: $dest <- $base"
 }
 
-# Claude Code 専用の設定（settings・hook）
+# Claude Code 専用の設定（settings）
 # ~/.claude 全体は projects/ や履歴を含むため、ファイル・ディレクトリ単位で link する。
-# hooks と skills はディレクトリごと link しない。端末側に組織固有の hook / skill を
+# skills はディレクトリごと link しない。端末側に組織固有の skill を
 # 直接置いて共存させるため。
 merge_claude_settings .claude/settings.base.json .claude/settings.json
-for hook in protect-branch confirm-destructive-git; do
-  link ".claude/hooks/$hook.sh" ".claude/hooks/$hook.sh"
-done
 
 # Claude Code と Codex で共有する全体規約と skill
 # Claude Code はユーザーレベルの AGENTS.md も ~/.agents/skills も読まないため、
@@ -285,7 +282,7 @@ if [ "$(uname)" = "Darwin" ]; then
 
   # .zshrc が依存するツール
   install_formula mise              # eval "$(mise activate zsh)"
-  install_formula jq                # merge_claude_settings と Claude Code の hook が使う
+  install_formula jq                # merge_claude_settings が使う
   install_formula zsh-autosuggestions
 
   # miseで管理できないツール
