@@ -18,4 +18,3 @@ docker-compose = "5.8.0"
 "aqua:docker/buildx" = "0.39.0" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
 lima = "2.3.0" # colimaの依存パッケージ
-"github:pomerium/cli" = "0.33.1"
