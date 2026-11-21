@@ -22,10 +22,10 @@
 
 | ワーカー種別 | Claude model | Codex model | effort |
 |---|---|---|---|
-| 実装（prd に触る、仕様が曖昧、長時間の自律作業） | fable または opus | gpt-6-astra または gpt-6-sol | high |
-| 実装（dev / staging、仕様が明確） | opus | gpt-6-sol | high |
-| 実装（定型。Renovate 追従、値の横展開） | opus | gpt-6-sol | medium |
-| 調査 | opus | gpt-6-sol | medium |
+| 実装（prd に触る、仕様が曖昧、長時間の自律作業） | fable または opus | gpt-6.2-astra または gpt-6.2-sol | high |
+| 実装（dev / staging、仕様が明確） | opus | gpt-6.2-sol | high |
+| 実装（定型。Renovate 追従、値の横展開） | opus | gpt-6.2-sol | medium |
+| 調査 | opus | gpt-6.2-sol | medium |
 | レビュー（実装・コード） | opus | gpt-6.2-sol | medium |
 | レビュー（セキュリティ） | opus | gpt-6.2-sol | high |
 | 機械的な確認（ビルド確認、一覧作成） | sonnet | gpt-6-luna | low |
