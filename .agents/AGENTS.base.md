@@ -26,8 +26,8 @@
 | 実装（dev / staging、仕様が明確） | opus | gpt-6-sol | high |
 | 実装（定型。Renovate 追従、値の横展開） | opus | gpt-6-sol | medium |
 | 調査 | opus | gpt-6-sol | medium |
-| レビュー（実装・コード） | opus | gpt-6-sol | medium |
-| レビュー（セキュリティ） | opus | gpt-6-sol | high |
+| レビュー（実装・コード） | opus | gpt-6.2-sol | medium |
+| レビュー（セキュリティ） | opus | gpt-6.2-sol | high |
 | 機械的な確認（ビルド確認、一覧作成） | sonnet | gpt-6-luna | low |
 
 - 上表は Anthropic の実測ガイド（https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence ）と OpenAI のモデル一覧（https://learn.chatgpt.com/docs/models ）に基づく初期値。品質が落ちた種別だけ effort を一段上げる
