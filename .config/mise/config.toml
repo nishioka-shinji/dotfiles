@@ -11,6 +11,7 @@ kustomize = "5.8.3"
 k9s = "0.51.0"
 neovim = "0.12.6"
 node = "26.13.1"
+uv = "0.13.9"
 
 # docker関連
 docker-cli = "29.10.0"
