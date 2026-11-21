@@ -17,16 +17,17 @@
 - git 操作・Jira 操作・日報記録はワーカーに任せず本体が行う
 - PR マージ後、GitOps でクラスタに反映される変更は実クラスタで動作確認する。確認が取れるまで動作確認済みと report しない
 - 自分が Orca のワーカー（プロンプトに Task / Dispatch ID 入りのプリアンブルがある）なら、この節と「作業完了時の運用」は適用せずプリアンブルに従う
+- コードレビューとセキュリティレビューのワーカーは、ユーザーがエージェントを指定した場合はその指定に従い、指定がなければ Codex を優先する。Codex が利用できない場合は Claude を使う。model / effort は下表に従う
 - ワーカーの model / effort は起動時に種別ごとに下表のとおり指定する。未指定だとユーザーデフォルトを継承し、種別に合わないことがある
 
 | ワーカー種別 | Claude model | Codex model | effort |
 |---|---|---|---|
-| 実装（prd に触る、仕様が曖昧、長時間の自律作業） | fable または opus | gpt-6-astra または gpt-6-sol | high |
-| 実装（dev / staging、仕様が明確） | opus | gpt-6-sol | high |
-| 実装（定型。Renovate 追従、値の横展開） | opus | gpt-6-sol | medium |
-| 調査 | opus | gpt-6-sol | medium |
-| レビュー（実装・コード） | opus | gpt-6-sol | medium |
-| レビュー（セキュリティ） | opus | gpt-6-sol | high |
+| 実装（prd に触る、仕様が曖昧、長時間の自律作業） | fable または opus | gpt-6.2-astra または gpt-6.2-sol | high |
+| 実装（dev / staging、仕様が明確） | opus | gpt-6.2-sol | high |
+| 実装（定型。Renovate 追従、値の横展開） | opus | gpt-6.2-sol | medium |
+| 調査 | opus | gpt-6.2-sol | medium |
+| レビュー（実装・コード） | opus | gpt-6.2-sol | medium |
+| レビュー（セキュリティ） | opus | gpt-6.2-sol | high |
 | 機械的な確認（ビルド確認、一覧作成） | sonnet | gpt-6-luna | low |
 
 - 上表は Anthropic の実測ガイド（https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence ）と OpenAI のモデル一覧（https://learn.chatgpt.com/docs/models ）に基づく初期値。品質が落ちた種別だけ effort を一段上げる
