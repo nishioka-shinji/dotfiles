@@ -14,7 +14,7 @@ node = "26.13.1"
 uv = "0.13.9"
 
 # docker関連
-docker-cli = "29.10.0"
+docker-cli = "29.10.1"
 docker-compose = "5.8.0"
 "aqua:docker/buildx" = "0.39.1" # レジストリに短縮名が無いのでバックエンドを明示
 colima = "0.10.3"
